@@ -15,7 +15,7 @@
 function returnFirstArgument(arg) {
     return arg;
 }
-console.log('Задание 1:', returnFirstArgument('hello world!'))
+
 /*
  Задание 2:
 
@@ -31,17 +31,9 @@ console.log('Задание 1:', returnFirstArgument('hello world!'))
    sumWithDefaults(10) вернет 110
  */
 function sumWithDefaults(a, b) {
-    if (b) {
-        return a + b;
-    } else {
-        const B = 100;
-        return a + B;
-    }
+    b = b || 100;
+    return a + b;
 }
-
-console.log('Задание 2:', sumWithDefaults(100, 45));
-console.log('Задание 2.1:', sumWithDefaults(20));
-
 
 /*
  Задание 3:
@@ -54,7 +46,6 @@ console.log('Задание 2.1:', sumWithDefaults(20));
 function returnFnResult(fn) {
     return fn();
 }
-console.log('Задание 3:', returnFnResult(() => 'привет'));
 
 /*
  Задание 4:
@@ -70,17 +61,12 @@ console.log('Задание 3:', returnFnResult(() => 'привет'));
    console.log(f()); // выведет 13
  */
 function returnCounter(number) {
-    return function() {
-        return number++;
-    }
+    return function F() {
+        number = number || 0;
+        number++;
+        return number;
+    };
 }
-var fn = returnCounter(10);
-
-console.log('Задание 4:');
-for (let i = 0; i <= 5; i++) {
-    console.log(fn());
-}
-
 
 /*
  Задание 5 *:
@@ -91,10 +77,9 @@ for (let i = 0; i <= 5; i++) {
  Пример:
    returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
  */
-function returnArgumentsArray() {
-    return arguments;
+function returnArgumentsArray(...arr) {
+    return arr;
 }
-console.log('Задание 5:', returnArgumentsArray(1, 2, 3, true));
 
 /*
  Задание 6 *:
@@ -111,16 +96,23 @@ console.log('Задание 5:', returnArgumentsArray(1, 2, 3, true));
 
    console.log(newSum()) выведет 6
  */
-function sum(a, b) {
-    return a + b;
+
+
+function bindFunction(fn, ...numbers) {
+    return function fn(numbers) {
+        let result = 0;
+        for (var i = 0; i < 10; i++) {
+            result += numbers[i];
+        }
+        return result;
+    };
 }
 
-
-function bindFunction(fn) {
-    let a = arguments[1];
-    let b = arguments[2];
-    return fn(a, b);
+export {
+    returnFirstArgument,
+    sumWithDefaults,
+    returnArgumentsArray,
+    returnFnResult,
+    returnCounter,
+    bindFunction
 }
-
-var newSum = bindFunction(sum, 40,50);
-console.log('Задание 6: newSum = ', newSum);
