@@ -15,6 +15,7 @@
 function returnFirstArgument(arg) {
     return arg;
 }
+console.log("Задание 1:", returnFirstArgument('Hello world!'));
 
 /*
  Задание 2:
@@ -34,6 +35,8 @@ function sumWithDefaults(a, b) {
     b = b || 100;
     return a + b;
 }
+console.log("Задание 2:", sumWithDefaults(10, 20));
+console.log("Задание 2.1:", sumWithDefaults(10));
 
 /*
  Задание 3:
@@ -46,6 +49,18 @@ function sumWithDefaults(a, b) {
 function returnFnResult(fn) {
     return fn();
 }
+
+var result_arrow = returnFnResult(() => 'Стрелочная функции сработала!'); //передача function Arrow
+
+var result_declaration = returnFnResult(function () {
+    return 'Function declaration сработала!';
+}); //передача function Declaration
+
+console.log('Задание 3:', result_arrow);
+console.log('Задание 3:', result_declaration);
+
+
+
 
 /*
  Задание 4:
@@ -68,6 +83,10 @@ function returnCounter(number) {
     };
 }
 
+var f = returnCounter(10);
+console.log('Задание 4:', f(), f(), f());
+
+
 /*
  Задание 5 *:
 
@@ -81,6 +100,7 @@ function returnArgumentsArray(...arr) {
     return arr;
 }
 
+console.log('Задание 5:', returnArgumentsArray(1, 2, 3, 4, true, 'hello'));
 /*
  Задание 6 *:
 
@@ -98,15 +118,27 @@ function returnArgumentsArray(...arr) {
  */
 
 
-function bindFunction(fn, ...numbers) {
-    return function fn(numbers) {
+function sum(numbers) {
+    return function () {
         let result = 0;
-        for (var i = 0; i < 10; i++) {
+        for (let i = 0; i < numbers.length; i++) {
             result += numbers[i];
         }
         return result;
     };
 }
+
+
+function bindFunction(fn, ...numbers) {
+    return fn(numbers);
+}
+
+var newSum = bindFunction(sum, 2, 4);
+
+console.log('Задание 6:',newSum());
+
+//console.log('Задание 6: newSum = ', bindFunction(sum,10,-20.02,30.56,2,false,true));
+
 
 export {
     returnFirstArgument,
