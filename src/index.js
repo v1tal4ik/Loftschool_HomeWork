@@ -15,7 +15,7 @@
 function returnFirstArgument(arg) {
     return arg;
 }
-console.log("Задание 1:", returnFirstArgument('Hello world!'));
+//console.log("Задание 1:", returnFirstArgument('Hello world!'));
 
 /*
  Задание 2:
@@ -31,12 +31,11 @@ console.log("Задание 1:", returnFirstArgument('Hello world!'));
  Пример:
    sumWithDefaults(10) вернет 110
  */
-function sumWithDefaults(a, b) {
-    b = b || 100;
+function sumWithDefaults(a, b = 100) {
     return a + b;
 }
-console.log("Задание 2:", sumWithDefaults(10, 20));
-console.log("Задание 2.1:", sumWithDefaults(10));
+//console.log("Задание 2:", sumWithDefaults(10, 20));
+//console.log("Задание 2.1:", sumWithDefaults(10));
 
 /*
  Задание 3:
@@ -56,8 +55,8 @@ var result_declaration = returnFnResult(function () {
     return 'Function declaration сработала!';
 }); //передача function Declaration
 
-console.log('Задание 3:', result_arrow);
-console.log('Задание 3:', result_declaration);
+//console.log('Задание 3:', result_arrow);
+//console.log('Задание 3:', result_declaration);
 
 
 
@@ -75,16 +74,14 @@ console.log('Задание 3:', result_declaration);
    console.log(f()); // выведет 12
    console.log(f()); // выведет 13
  */
-function returnCounter(number) {
-    return function F() {
-        number = number || 0;
-        number++;
-        return number;
+const returnCounter = (number = 0) => {
+    return () => {
+        return ++number;
     };
 }
 
 var f = returnCounter(10);
-console.log('Задание 4:', f(), f(), f());
+//console.log('Задание 4:', f(), f(), f());
 
 
 /*
@@ -100,7 +97,7 @@ function returnArgumentsArray(...arr) {
     return arr;
 }
 
-console.log('Задание 5:', returnArgumentsArray(1, 2, 3, 4, true, 'hello'));
+//console.log('Задание 5:', returnArgumentsArray(1, 2, 3, 4, true, 'hello'));
 /*
  Задание 6 *:
 
@@ -118,26 +115,20 @@ console.log('Задание 5:', returnArgumentsArray(1, 2, 3, 4, true, 'hello')
  */
 
 
-function sum(numbers) {
-    return function () {
+function sum(array) {
         let result = 0;
-        for (let i = 0; i < numbers.length; i++) {
-            result += numbers[i];
+        for(let i=0; i<array.length;i++){
+            result += array[i];
         }
         return result;
-    };
 }
 
-
-function bindFunction(fn, ...numbers) {
-    return fn(numbers);
+function bindFunction(fn,...numbers) {
+    return fn.bind(fn,numbers);
 }
 
-var newSum = bindFunction(sum, 2, 4);
-
-console.log('Задание 6:',newSum());
-
-//console.log('Задание 6: newSum = ', bindFunction(sum,10,-20.02,30.56,2,false,true));
+var newSum = bindFunction(sum, 10,2,3, false, true)
+console.log('Задание 6: newSum = ',newSum());
 
 
 export {
