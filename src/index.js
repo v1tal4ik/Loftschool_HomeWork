@@ -124,7 +124,7 @@ function sum(array) {
 }
 
 function bindFunction(fn,...numbers) {
-    return fn.bind(fn,numbers);
+    return fn.bind(fn,...numbers);
 }
 
 var newSum = bindFunction(sum, 10,2,3, false, true)
