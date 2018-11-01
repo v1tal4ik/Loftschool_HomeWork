@@ -53,7 +53,7 @@ function reduce(array, fn, initial) {
  */
 function upperProps(obj) {
     let arr = Object.keys(obj),
-        arrUpper = new Array();
+        arrUpper = [];
     for (let i = 0; i < arr.length; i++) {
         arrUpper[i] = arr[i].toUpperCase();
     }
