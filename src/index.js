@@ -20,20 +20,12 @@ function isAllTrue(array, fn) {
     if (!(Array.isArray(array)) || array.length == 0) {
         throw new Error('empty array');
     }
-    
-    
     let counter = 0;
     for(let i=0; i< array.length;i++){
-        let result = fn(array[i]);
-        if(result){
-            counter++;
-        }
+       let result = fn(array[i]);
+        result ? counter++ : counter--;
     }
-    if(counter == array.length){
-        return true;
-    }else{
-        return false;
-    }
+    return (counter == array.length)? true : false;
 }
 
 /*
