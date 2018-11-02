@@ -68,7 +68,16 @@ function isSomeTrue(array, fn) {
  3.3: Необходимо выбрасывать исключение в случаях:
    - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn) {
+function returnBadArguments(fn,...rest) {
+   if (!(typeof (fn) == 'function')) {
+        throw new Error('fn is not a function');
+    }  
+    for (let i = 0; i < rest.length; i++) {
+        fn(rest[i]);
+    }
+    if(rest.length == 0){
+        return [];
+    }
 }
 
 /*
@@ -88,7 +97,46 @@ function returnBadArguments(fn) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
+function calculator(number=0) {
+    if( typeof(number)!= 'number' ){
+         throw new Error("number is not a number");
+     }
+    let obj ={
+        sum:function(...rest){
+            let result = number;
+            for(let i=0; i<rest.length;i++){
+                result += rest[i];
+            }
+            return result;
+        },
+        dif:function(...rest){
+            let result = number;
+            for(let i=0; i<rest.length;i++){
+                result -= rest[i];
+            }
+            return result;
+        },
+        div:function(...rest){
+            let result = number;
+            for(let i=0; i<rest.length;i++){
+                if(rest[i]==0){
+                    throw new Error("division by 0");
+                }
+                result /= rest[i];
+            }
+            return result;
+            
+        },
+        mul:function(...rest){
+            let result = number;
+            for(let i=0; i<rest.length;i++){
+                result *= rest[i];
+            }
+            return result;
+        }
+    }
+    
+    return obj;
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
