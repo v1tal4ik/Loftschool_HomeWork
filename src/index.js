@@ -23,13 +23,13 @@ function isAllTrue(array, fn) {
     if (!(typeof (fn) == 'function')) {
         throw new Error('fn is not a function');
     }
-    
+
     let counter = 0;
-    for(let i=0; i< array.length;i++){
-       let result = fn(array[i]);
+    for (let i = 0; i < array.length; i++) {
+        let result = fn(array[i]);
         result ? counter++ : counter--;
     }
-    return (counter == array.length)? true : false;
+    return (counter == array.length) ? true : false;
 }
 
 /*
@@ -49,17 +49,17 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
-   if (!(Array.isArray(array)) || array.length == 0) {
+    if (!(Array.isArray(array)) || array.length == 0) {
         throw new Error('empty array');
     }
     if (!(typeof (fn) == 'function')) {
         throw new Error('fn is not a function');
     }
-    
-    for(let i=0; i< array.length;i++){
-       if(fn(array[i])){
-           return true;
-       }
+
+    for (let i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return true;
+        }
     }
     return false;
 }
@@ -75,7 +75,7 @@ function isSomeTrue(array, fn) {
  3.3: Необходимо выбрасывать исключение в случаях:
    - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn,...rest) {
+function returnBadArguments(fn, ...rest) {
     let arr_e = [];
     if (!(typeof (fn) == 'function')) {
         throw new Error('fn is not a function');
@@ -111,20 +111,17 @@ function calculator(number = 0) {
     if (typeof (number) != 'number') {
         throw new Error("number is not a number");
     }
-    let obj = {
-        sum: function (...rest) {
-             let result = rest.reduce(function (sum, current) {
-                return sum + current;
-            }, number);
-            return result
-        },
-        dif: function (...rest) {
-            let result = rest.reduce(function (dif, current) {
+    let obj = {};
+
+    obj.sum = (...rest) => rest.reduce(function (sum, current) {
+        return sum + current;
+    }, number);
+    
+     obj.dif = (...rest) => rest.reduce(function (dif, current) {
                 return dif - current;
             }, number);
-            return result;
-        },
-        div: function (...rest) {
+    
+    obj.div = function (...rest) {
             let result = number;
             for (let i = 0; i < rest.length; i++) {
                 if (rest[i] == 0) {
@@ -134,14 +131,12 @@ function calculator(number = 0) {
             }
             return result;
 
-        },
-        mul: function (...rest) {
-            let result = rest.reduce(function (mul, current) {
+        }
+    
+     obj.mul = (...rest) => rest.reduce(function (mul, current) {
                 return mul * current;
             }, number);
-            return result;
-        }
-    }
+
 
     return obj;
 }
