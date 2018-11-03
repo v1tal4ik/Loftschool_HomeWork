@@ -90,9 +90,6 @@ function slice(array, from, to) {
  */
 function createProxy(obj) {
     let proxy = new Proxy(obj,{
-       get(target, prop){
-           return target[prop];
-       },
         set(target,prop,value){
             target[prop] = Math.pow(value,2);
             return true;
