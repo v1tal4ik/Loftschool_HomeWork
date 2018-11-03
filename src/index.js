@@ -113,11 +113,11 @@ function calculator(number = 0) {
     }
     let obj = {};
 
-    obj.sum = (...rest) => rest.reduce(function (sum, current) {
+    obj.sum = (...rest) => rest.reduce( (sum, current) =>{
         return sum + current;
     }, number);
     
-     obj.dif = (...rest) => rest.reduce(function (dif, current) {
+     obj.dif = (...rest) => rest.reduce((dif, current)=> {
                 return dif - current;
             }, number);
     
@@ -133,7 +133,7 @@ function calculator(number = 0) {
 
         }
     
-     obj.mul = (...rest) => rest.reduce(function (mul, current) {
+     obj.mul = (...rest) => rest.reduce((mul, current)=> {
                 return mul * current;
             }, number);
 
