@@ -113,29 +113,19 @@ function calculator(number = 0) {
     }
     let obj = {};
 
-    obj.sum = (...rest) => rest.reduce( (sum, current) =>{
-        return sum + current;
-    }, number);
-    
-     obj.dif = (...rest) => rest.reduce((dif, current)=> {
-                return dif - current;
-            }, number);
-    
-    obj.div = function (...rest) {
-            let result = number;
-            for (let i = 0; i < rest.length; i++) {
-                if (rest[i] == 0) {
-                    throw new Error("division by 0");
-                }
-                result /= rest[i];
-            }
-            return result;
+    obj.sum = (...rest) => rest.reduce((sum, current) => sum + current, number);
 
+    obj.dif = (...rest) => rest.reduce((dif, current) => dif - current, number);
+
+    obj.div = (...rest) => rest.reduce((div, current) => {
+        if (current === 0) {
+            throw new Error("division by 0");
+        } else {
+            return div / current;
         }
-    
-     obj.mul = (...rest) => rest.reduce((mul, current)=> {
-                return mul * current;
-            }, number);
+    }, number);
+
+    obj.mul = (...rest) => rest.reduce((mul, current) => mul * current, number);
 
 
     return obj;
