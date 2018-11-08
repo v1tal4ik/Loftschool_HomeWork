@@ -212,10 +212,10 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
-   let my = function (changed) {
+     let my = function (changed) {
         console.log('Прийшло ', changed);
         let type = '',
-            nodes = [],
+            nodes_arr = [],
             obj = {};
         
         for (let i = 0; i < changed.length; i++) {
@@ -228,11 +228,11 @@ function observeChildNodes(where, fn) {
             if (changed[i].removedNodes.length !== 0) {
                 console.log('видалення');
                 type = 'remove';
-                nodes.push(changed[i].removedNodes[i].nodeName);
+                nodes_arr.push(changed[i].removedNodes[i].nodeName);
             }
         }
         obj.type = type;
-        obj.nodes = nodes;
+        obj.nodes = nodes_arr;
         fn(obj);
     }
 
