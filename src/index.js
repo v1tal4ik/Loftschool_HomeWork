@@ -149,43 +149,30 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
-    let obj = {};
-    let array = [];
+    let obj = {},
+        array = [],
+        array_class = [],
+        array_tag = [];
 
     for (let elements of root.childNodes) {
         elements.nodeName == '#text' ? array.push(elements) : null; //к-сть текстових узлів
         elements.nodeName == '#text' ? elements.remove() : null; //видалення зайвих текстових вузлів
+        array_class.push(elements.className); //запис імен класу в масив array_class
+        array_tag.push(elements.nodeName); //запис тегів  в масив array_class
     }
 
-    //запис імен класу в масив array_class
-    let array_class = [];
-    for (let elements of root.childNodes) {
-        array_class.push(elements.className);
-    }
-    
     //запис к-сті імен кожного класу в масив number_name
-    let number_name = array_class.reduce((lastResult,item)=>{
-        lastResult[item] = (lastResult[item]|| 0) +1;
+    let number_name = array_class.reduce((lastResult, item) => {
+        lastResult[item] = (lastResult[item] || 0) + 1;
         return lastResult;
-    },{});
-    
-    //запис тегів  в масив array_class
-    let array_tag = [];
-    for (let elements of root.childNodes) {
-        array_tag.push(elements.nodeName);
-    }
-    
+    }, {});
+
     //запис назви та к-сті в масив number_tag
-    let number_tag = array_tag.reduce((lastResult,item)=>{
-        lastResult[item] = (lastResult[item]|| 0) +1;
+    let number_tag = array_tag.reduce((lastResult, item) => {
+        lastResult[item] = (lastResult[item] || 0) + 1;
         return lastResult;
-    },{});
-    
-    
+    }, {});
 
-
-
-    
     obj.tags = number_tag;
     obj.classes = number_name;
     obj.texts = array.length;
@@ -224,7 +211,38 @@ function collectDOMStat(root) {
      nodes: [div]
    }
  */
-function observeChildNodes(where, fn) {}
+function observeChildNodes(where, fn) {
+   let my = function (changed) {
+        console.log('Прийшло ', changed);
+        let type = '',
+            nodes = [],
+            obj = {};
+        
+        for (let i = 0; i < changed.length; i++) {
+            if (changed[i].addedNodes.length !== 0) {
+                console.log('добавляння');
+                type = 'insert';
+                nodes = changed[i].addedNodes[i].nodeName;
+            }
+
+            if (changed[i].removedNodes.length !== 0) {
+                console.log('видалення');
+                type = 'remove';
+                nodes.push(changed[i].removedNodes[i].nodeName);
+            }
+        }
+        obj.type = type;
+        obj.nodes = nodes;
+        fn(obj);
+    }
+
+    let mo = new MutationObserver(my),
+        options = {
+            'childList': true,
+            'subtree': true
+        }
+    mo.observe(where, options);
+}
 
 export {
     createDivWithText,
