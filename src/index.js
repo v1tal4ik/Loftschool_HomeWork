@@ -217,22 +217,19 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
-    let my = function (changed) {
-        console.log('Прийшло ', changed);
+    let saveChange = function (changed) {
         let type = '',
+            nodes_arr = [],
             obj = {};
         for (let i = 0; i < changed.length; i++) {
-            let nodes_arr = [];
             if (changed[i].addedNodes.length !== 0) {
-                console.log('добавляння', changed[i].addedNodes[0]);
                 type = 'insert';
-                nodes_arr.push(changed[i].addedNodes[0]);
+                nodes_arr = [...changed[i].addedNodes];
             }
 
             if (changed[i].removedNodes.length !== 0) {
-                console.log('видалення');
                 type = 'remove';
-                nodes_arr.push(changed[i].removedNodes[0]);
+                nodes_arr = [...changed[i].removedNodes];
             }
             obj.type = type;
             obj.nodes = nodes_arr;
@@ -240,7 +237,7 @@ function observeChildNodes(where, fn) {
         }
     }
 
-    let mo = new MutationObserver(my),
+    let mo = new MutationObserver(saveChange),
         options = {
             'childList': true,
             'subtree': true
