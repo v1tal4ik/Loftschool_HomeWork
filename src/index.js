@@ -153,14 +153,18 @@ function collectDOMStat(root) {
         array = [],
         array_class = [],
         array_tag = [];
+    
+    //console.log(root.childNodes);
 
     for (let elements of root.childNodes) {
+        console.log(elements);
         elements.nodeName == '#text' ? array.push(elements) : null; //к-сть текстових узлів
-        elements.nodeName == '#text' ? elements.remove() : null; //видалення зайвих текстових вузлів
-        array_class.push(elements.className); //запис імен класу в масив array_class
-        array_tag.push(elements.nodeName); //запис тегів  в масив array_class
+        elements.className !== undefined ? array_class.push(elements.className): null; //запис імен класу в масив array_class
+        elements.tagName !== undefined ? array_tag.push(elements.tagName): null; //запис тегів  в масив array_class
     }
 
+    console.log(array_class);
+    console.log(array_tag);
     //запис к-сті імен кожного класу в масив number_name
     let number_name = array_class.reduce((lastResult, item) => {
         lastResult[item] = (lastResult[item] || 0) + 1;
@@ -172,6 +176,7 @@ function collectDOMStat(root) {
         lastResult[item] = (lastResult[item] || 0) + 1;
         return lastResult;
     }, {});
+
 
     obj.tags = number_tag;
     obj.classes = number_name;
@@ -220,15 +225,15 @@ function observeChildNodes(where, fn) {
         
         for (let i = 0; i < changed.length; i++) {
             if (changed[i].addedNodes.length !== 0) {
-                console.log('добавляння');
+                console.log('добавляння',i,changed[i].addedNodes[0].nodeName);
                 type = 'insert';
-                nodes = changed[i].addedNodes[i].nodeName;
+                nodes_arr.push(changed[i].addedNodes[0].nodeName);
             }
 
             if (changed[i].removedNodes.length !== 0) {
                 console.log('видалення');
                 type = 'remove';
-                nodes_arr.push(changed[i].removedNodes[i].nodeName);
+                nodes_arr.push(changed[i].removedNodes[0].nodeName);
             }
         }
         obj.type = type;
