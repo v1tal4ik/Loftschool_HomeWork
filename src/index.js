@@ -149,22 +149,46 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
-    let obj = {},
-        array = [],
-        array_class = [],
-        array_tag = [];
-    
-    //console.log(root.childNodes);
+    let counter_text = 0,
+        obj = {},
+        obj_child = {},
+        array_tag = [],
+        array_class = [];
 
-    for (let elements of root.childNodes) {
-        console.log(elements);
-        elements.nodeName == '#text' ? array.push(elements) : null; //к-сть текстових узлів
-        elements.className !== undefined ? array_class.push(elements.className): null; //запис імен класу в масив array_class
-        elements.tagName !== undefined ? array_tag.push(elements.tagName): null; //запис тегів  в масив array_class
+    for (let i = 0; i < root.childNodes.length; i++) {
+        // console.log(root.childNodes[i]);
+        if (root.childNodes[i].nodeType == 3) {
+            counter_text++;
+        }
+        if (root.childNodes[i].nodeType == 1) {
+            array_tag.push(root.childNodes[i].tagName);
+        }
+
+        if (root.childNodes[i].className !== undefined && root.childNodes[i].className !== '') {
+            //console.log(root.childNodes[i].classList.length);
+            if (root.childNodes[i].classList.length > 1) {
+                for (let j = 0; j < root.childNodes[i].classList.length; j++) {
+                    array_class.push(root.childNodes[i].classList[j]);
+                }
+            } else {
+                array_class.push(root.childNodes[i].className);
+            }
+        }
+        if (root.childNodes[i].childElementCount > 0) {
+            obj_child = collectDOMStat(root.childNodes[i]);
+            for (let elem in obj_child.tags) {
+                for (let i = 0; i < obj_child.tags[elem]; i++) {
+                    array_tag.push(elem);
+                }
+            }
+
+            for (let elem in obj_child.classes) {
+                array_class.push(elem);
+            }
+            counter_text += obj_child.texts;
+        }
     }
-
     console.log(array_class);
-    console.log(array_tag);
     //запис к-сті імен кожного класу в масив number_name
     let number_name = array_class.reduce((lastResult, item) => {
         lastResult[item] = (lastResult[item] || 0) + 1;
@@ -177,13 +201,11 @@ function collectDOMStat(root) {
         return lastResult;
     }, {});
 
-
     obj.tags = number_tag;
     obj.classes = number_name;
-    obj.texts = array.length;
+    obj.texts = counter_text;
     return obj;
 }
-
 /*
  Задание 8 *:
 
