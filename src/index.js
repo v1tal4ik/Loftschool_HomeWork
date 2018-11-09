@@ -217,28 +217,27 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
-     let my = function (changed) {
+    let my = function (changed) {
         console.log('Прийшло ', changed);
         let type = '',
-            nodes_arr = [],
             obj = {};
-        
         for (let i = 0; i < changed.length; i++) {
+            let nodes_arr = [];
             if (changed[i].addedNodes.length !== 0) {
-                console.log('добавляння',i,changed[i].addedNodes[0].nodeName);
+                console.log('добавляння', changed[i].addedNodes[0]);
                 type = 'insert';
-                nodes_arr.push(changed[i].addedNodes[0].nodeName);
+                nodes_arr.push(changed[i].addedNodes[0]);
             }
 
             if (changed[i].removedNodes.length !== 0) {
                 console.log('видалення');
                 type = 'remove';
-                nodes_arr.push(changed[i].removedNodes[0].nodeName);
+                nodes_arr.push(changed[i].removedNodes[0]);
             }
+            obj.type = type;
+            obj.nodes = nodes_arr;
+            fn(obj);
         }
-        obj.type = type;
-        obj.nodes = nodes_arr;
-        fn(obj);
     }
 
     let mo = new MutationObserver(my),
