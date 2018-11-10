@@ -149,57 +149,31 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
-    let counter_text = 0,
-        obj = {},
-        obj_child = {},
-        array_tag = [],
-        array_class = [];
+    let obj = {
+        tags: {},
+        classes: {},
+        texts: 0
+    }
+    console.log(root.childNodes);
 
-    for (let i = 0; i < root.childNodes.length; i++) {
-        root.childNodes[i].nodeType == 3 ? counter_text++ : null;
-        root.childNodes[i].nodeType == 1 ? array_tag.push(root.childNodes[i].tagName) : null;
-
-        if (root.childNodes[i].className !== undefined && root.childNodes[i].className !== '') {
-            if (root.childNodes[i].classList.length > 1) {
-                for (let j = 0; j < root.childNodes[i].classList.length; j++) {
-                    array_class.push(root.childNodes[i].classList[j]);
+    
+    function forChilds(el) {
+        for(let element of el.childNodes){
+            if(element.nodeType === 3){
+                obj.texts++;
+            }else{
+                let name = element.tagName;
+                obj.tags[name] = obj.tags[name] ? ++obj.tags[name] : 1;
+                for( let classes of element.classList){
+                    obj.classes[classes] = obj.classes[classes] ? ++obj.classes[classes] : 1;
                 }
-            } else {
-                array_class.push(root.childNodes[i].className);
+               forChilds(element);
             }
-        }
-        if (root.childNodes[i].childElementCount > 0) {
-            obj_child = collectDOMStat(root.childNodes[i]);
-            for (let elem in obj_child.tags) {
-                for (let i = 0; i < obj_child.tags[elem]; i++) {
-                    array_tag.push(elem);
-                }
-            }
-
-            for (let elem in obj_child.classes) {
-                array_class.push(elem);
-            }
-            counter_text += obj_child.texts;
         }
     }
 
+    forChilds(root);
 
-    //запис к-сті імен кожного класу в масив number_name
-    let number_name = array_class.reduce((lastResult, item) => {
-        lastResult[item] = (lastResult[item] || 0) + 1;
-        return lastResult;
-    }, {});
-
-    //запис назви та к-сті в масив number_tag
-    let number_tag = array_tag.reduce((lastResult, item) => {
-        lastResult[item] = (lastResult[item] || 0) + 1;
-        return lastResult;
-    }, {});
-
-
-    obj.tags = number_tag;
-    obj.classes = number_name;
-    obj.texts = counter_text;
     return obj;
 }
 
