@@ -156,16 +156,10 @@ function collectDOMStat(root) {
         array_class = [];
 
     for (let i = 0; i < root.childNodes.length; i++) {
-        // console.log(root.childNodes[i]);
-        if (root.childNodes[i].nodeType == 3) {
-            counter_text++;
-        }
-        if (root.childNodes[i].nodeType == 1) {
-            array_tag.push(root.childNodes[i].tagName);
-        }
+        root.childNodes[i].nodeType == 3 ? counter_text++ : null;
+        root.childNodes[i].nodeType == 1 ? array_tag.push(root.childNodes[i].tagName) : null;
 
         if (root.childNodes[i].className !== undefined && root.childNodes[i].className !== '') {
-            //console.log(root.childNodes[i].classList.length);
             if (root.childNodes[i].classList.length > 1) {
                 for (let j = 0; j < root.childNodes[i].classList.length; j++) {
                     array_class.push(root.childNodes[i].classList[j]);
@@ -188,7 +182,8 @@ function collectDOMStat(root) {
             counter_text += obj_child.texts;
         }
     }
-    console.log(array_class);
+
+
     //запис к-сті імен кожного класу в масив number_name
     let number_name = array_class.reduce((lastResult, item) => {
         lastResult[item] = (lastResult[item] || 0) + 1;
@@ -201,11 +196,13 @@ function collectDOMStat(root) {
         return lastResult;
     }, {});
 
+
     obj.tags = number_tag;
     obj.classes = number_name;
     obj.texts = counter_text;
     return obj;
 }
+
 /*
  Задание 8 *:
 
