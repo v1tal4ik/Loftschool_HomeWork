@@ -29,12 +29,11 @@ const homeworkContainer = document.querySelector('#homework-container');
 function createDiv() {
     let width = (Math.random()) * 1000,
         height = (Math.random()) * 1000,
-        colors = ['red', 'green', 'yellow', 'black', 'grey', 'pink', 'violet', 'wheat', 'silver', 'blue', 'orange'],
-        color = colors[Math.round(Math.random() * 10)],
+        color = '#'+ Math.floor(Math.random()* (99)) + Math.floor(Math.random()* (99)),
         x = (Math.random()) * 100,
         y = (Math.random()) * 100;
-    console.log(x);
 
+    console.log(color);
     let div = document.createElement('div');
     div.classList.add('draggable-div');
     div.style.width = 50 + 'px';
