@@ -27,22 +27,22 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
-let width = (Math.random()) * 1000,
+    let width = (Math.random()) * 1000,
         height = (Math.random()) * 1000,
-        colors = ['red','green','yellow','black','grey','pink','violet','wheat','silver','blue','orange'],
-        color = colors[Math.round(Math.random()*10)],
+        colors = ['red', 'green', 'yellow', 'black', 'grey', 'pink', 'violet', 'wheat', 'silver', 'blue', 'orange'],
+        color = colors[Math.round(Math.random() * 10)],
         x = (Math.random()) * 100,
         y = (Math.random()) * 100;
     console.log(x);
-    
+
     let div = document.createElement('div');
     div.classList.add('draggable-div');
-    div.style.width = 50+'px';
-    div.style.height = 50+'px';
+    div.style.width = 50 + 'px';
+    div.style.height = 50 + 'px';
     div.style.background = color;
     div.style.position = 'absolute';
-    div.style.left = x+'%';
-    div.style.top = y+'%';
+    div.style.left = x + '%';
+    div.style.top = y + '%';
     return div;
 }
 
@@ -55,11 +55,50 @@ let width = (Math.random()) * 1000,
    addListeners(newDiv);
  */
 function addListeners(target) {
+    target.onmousedown = function (e) {
+        let coords = getCoords(target); //координати всього елемента
+
+        //координати точки на елементі
+        let shiftX = e.pageX - coords.left;
+        let shiftY = e.pageY - coords.top;
+
+        target.style.position = 'absolute';
+        document.body.appendChild(div);
+        moveAt(e);
+        target.style.zIndex = 1000;
+
+        //// нові координати
+        function moveAt(e) {
+            target.style.left = e.pageX - shiftX + 'px'; /// ?
+            target.style.top = e.pageY - shiftY + 'px'; /// ?
+        }
+
+        /// слідкування куда пересунулася мишка
+        document.onmousemove = function (e) {
+            moveAt(e);
+        };
+
+
+        /// відпускання кнопки - обнулити обработчики собитій
+        target.onmouseup = function () {
+
+            document.onmousemove = null;
+            target.onmouseup = null;
+        };
+    };
+
+    function getCoords(elem) {
+        let box = elem.getBoundingClientRect(); //усі координати elem
+        return {
+            top: box.top + pageYOffset,
+            left: box.left + pageXOffset
+        }
+    }
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
 
-addDivButton.addEventListener('click', function() {
+addDivButton.addEventListener('click', function () {
     // создать новый div
     const div = createDiv();
 
