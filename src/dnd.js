@@ -27,23 +27,23 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
-    let width = (Math.random()) * 1000,
-        height = (Math.random()) * 1000,
+    let width = (Math.random()) * 100,
+        height = (Math.random()) * 100,
         color = '#'+ Math.floor(Math.random()* (99)) + Math.floor(Math.random()* (99)),
         x = (Math.random()) * 100,
         y = (Math.random()) * 100;
 
-    console.log(color);
     let div = document.createElement('div');
     div.classList.add('draggable-div');
-    div.style.width = 50 + 'px';
-    div.style.height = 50 + 'px';
+    div.style.width = width + 'px';
+    div.style.height = height + 'px';
     div.style.background = color;
     div.style.position = 'absolute';
     div.style.left = x + '%';
     div.style.top = y + '%';
     return div;
 }
+
 
 /*
  Функция должна добавлять обработчики событий для перетаскивания элемента при помощи drag and drop
@@ -62,7 +62,6 @@ function addListeners(target) {
         let shiftY = e.pageY - coords.top;
 
         target.style.position = 'absolute';
-        document.body.appendChild(div);
         moveAt(e);
         target.style.zIndex = 1000;
 
