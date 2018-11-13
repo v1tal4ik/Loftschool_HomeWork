@@ -37,6 +37,33 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+        xhr.send();
+        xhr.responseType = 'json';
+        xhr.addEventListener('load', () => {
+            if (xhr.status >= 400) {
+                reject(xhr.status);
+            } else {
+                let cities = xhr.response;
+                let cities_sort = cities.sort(sortAlphabet);
+                resolve(cities_sort);
+            }
+        })
+
+
+        function sortAlphabet(a, b) {
+            if (a.name < b.name) {
+                return -1
+            };
+            if (a.name > b.name) {
+                return 1
+            };
+            return 0;
+        }
+
+    });
 }
 
 /*
@@ -51,6 +78,10 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    let full_up = full.toLocaleUpperCase();
+    let chunk_up = chunk.toLocaleUpperCase();
+    let result = full.includes(chunk);
+    return result;
 }
 
 /* Блок с надписью "Загрузка" */
@@ -62,8 +93,22 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function() {
-    // это обработчик нажатия кливиш в текстовом поле
+filterInput.addEventListener('keyup', function (e) {
+    if (e.keyCode < 90 && e.keyCode > 64) {
+        let result = loadTowns();
+        result.then((towns) => {
+            for (let city of towns) {
+                let result = isMatching(city.name, filterInput.value);
+                console.log(result);
+                if (result) {
+                    let div = document.createElement('div');
+                    div.classList.add('city-item');
+                    div.textContent = city.name;
+                    filterResult.appendChild(div);
+                }
+            }
+        });
+    }
 });
 
 export {
