@@ -78,10 +78,7 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
-    let full_up = full.toLocaleUpperCase();
-    let chunk_up = chunk.toLocaleUpperCase();
-    let result = full.includes(chunk);
-    return result;
+    return full.toUpperCase().includes(chunk.toUpperCase());
 }
 
 /* Блок с надписью "Загрузка" */
@@ -94,21 +91,23 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
 filterInput.addEventListener('keyup', function (e) {
-    if (e.keyCode < 90 && e.keyCode > 64) {
-        let result = loadTowns();
-        result.then((towns) => {
-            for (let city of towns) {
-                let result = isMatching(city.name, filterInput.value);
-                console.log(result);
-                if (result) {
+    filterResult.innerHTML = '';
+    let result = loadTowns();
+    result.then((towns) => {
+        for (let city of towns) {
+            if (filterInput.value == '') {
+                filterResult.innerHTML = '';
+            } else {
+                if (isMatching(city.name, filterInput.value)) {
                     let div = document.createElement('div');
                     div.classList.add('city-item');
                     div.textContent = city.name;
                     filterResult.appendChild(div);
                 }
             }
-        });
-    }
+
+        }
+    });
 });
 
 export {
