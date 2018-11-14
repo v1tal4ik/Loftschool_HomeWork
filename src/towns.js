@@ -20,22 +20,8 @@
  При клике на кнопку, процесс загруки повторяется заново
  */
 
-/*
- homeworkContainer - это контейнер для всех ваших домашних заданий
- Если вы создаете новые html-элементы и добавляете их на страницу, то дабавляйте их только в этот контейнер
-
- Пример:
-   const newDiv = document.createElement('div');
-   homeworkContainer.appendChild(newDiv);
- */
 const homeworkContainer = document.querySelector('#homework-container');
 
-/*
- Функция должна вернуть Promise, который должен быть разрешен с массивом городов в качестве значения
-
- Массив городов пожно получить отправив асинхронный запрос по адресу
- https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
- */
 function loadTowns() {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -50,6 +36,10 @@ function loadTowns() {
                 let cities_sort = cities.sort(sortAlphabet);
                 resolve(cities_sort);
             }
+        });
+        
+        xhr.addEventListener('error',()=>{
+            reject(xhr.status);
         })
 
 
@@ -66,23 +56,14 @@ function loadTowns() {
     });
 }
 
-/*
- Функция должна проверять встречается ли подстрока chunk в строке full
- Проверка должна происходить без учета регистра символов
-
- Пример:
-   isMatching('Moscow', 'moscow') // true
-   isMatching('Moscow', 'mosc') // true
-   isMatching('Moscow', 'cow') // true
-   isMatching('Moscow', 'SCO') // true
-   isMatching('Moscow', 'Moscov') // false
- */
 function isMatching(full, chunk) {
     return full.toUpperCase().includes(chunk.toUpperCase());
 }
 
+
+
 /* Блок с надписью "Загрузка" */
-const loadingBlock = homeworkContainer.querySelector('#loading-block');
+let loadingBlock = homeworkContainer.querySelector('#loading-block');
 /* Блок с текстовым полем и результатом поиска */
 const filterBlock = homeworkContainer.querySelector('#filter-block');
 /* Текстовое поле для поиска по городам */
@@ -90,25 +71,54 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function (e) {
-    filterResult.innerHTML = '';
-    let result = loadTowns();
-    result.then((towns) => {
-        for (let city of towns) {
-            if (filterInput.value == '') {
-                filterResult.innerHTML = '';
-            } else {
-                if (isMatching(city.name, filterInput.value)) {
-                    let div = document.createElement('div');
-                    div.classList.add('city-item');
-                    div.textContent = city.name;
-                    filterResult.appendChild(div);
-                }
-            }
 
-        }
+var result = loadTowns();
+result.then(
+    (towns) => {
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'block';
+
+        filterInput.addEventListener('keyup', function (e) {
+            filterResult.innerHTML = '';
+            for (let city of towns) {
+                if (filterInput.value == '') {
+                    filterResult.innerHTML = '';
+                } else {
+                    if (isMatching(city.name, filterInput.value)) {
+                        let div = document.createElement('div');
+                        div.classList.add('city-item');
+                        div.textContent = city.name;
+                        filterResult.appendChild(div);
+                    }
+                }
+
+            }
+        });
+    },
+    (status) => {
+        console.log(status);
+        const errorBlock = document.createElement('div');
+        errorBlock.classList.add('errorBlock');
+
+        const errorText = document.createElement('p');
+        errorText.classList.add('errorText');
+        errorText.innerHTML = status + ' - Не вдалося загрузити';
+
+        const repeatBtn = document.createElement('button');
+        repeatBtn.classList.add('repeatBtn');
+        repeatBtn.textContent = "Повторить";
+
+        errorBlock.appendChild(errorText);
+        errorBlock.appendChild(repeatBtn);
+
+        loadingBlock.style.display = 'none';
+        homeworkContainer.insertBefore(errorBlock, filterBlock);
+
+
+        repeatBtn.addEventListener('click', () => {
+             
+        })
     });
-});
 
 export {
     loadTowns,
