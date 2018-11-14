@@ -71,8 +71,10 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
+start();
 
-var result = loadTowns();
+function start(){
+   let result = loadTowns();
 result.then(
     (towns) => {
         loadingBlock.style.display = 'none';
@@ -116,9 +118,11 @@ result.then(
 
 
         repeatBtn.addEventListener('click', () => {
-             
+             start();
+            errorBlock.remove();
         })
     });
+} 
 
 export {
     loadTowns,
