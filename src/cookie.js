@@ -19,18 +19,8 @@
  Если дабавляемая cookie не соответсвуте фильтру, то она должна быть добавлена только в браузер, но не в таблицу
  Если добавляется cookie, с именем уже существующией cookie и ее новое значение не соответствует фильтру,
  то ее значение должно быть обновлено в браузере, а из таблицы cookie должна быть удалена
+*/
 
- Запрещено использовать сторонние библиотеки. Разрешено пользоваться только тем, что встроено в браузер
- */
-
-/*
- homeworkContainer - это контейнер для всех ваших домашних заданий
- Если вы создаете новые html-элементы и добавляете их на страницу, то дабавляйте их только в этот контейнер
-
- Пример:
-   const newDiv = document.createElement('div');
-   homeworkContainer.appendChild(newDiv);
- */
 const homeworkContainer = document.querySelector('#homework-container');
 // текстовое поле для фильтрации cookie
 const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
@@ -44,40 +34,61 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 
+loadCookie(filterNameInput.value);
 
 
-loadCookie();
-
-
-function loadCookie() {
+function loadCookie(value) {
+    console.log('value = ',value);
     listTable.innerHTML = '';
     let array_cookie = document.cookie.split('; ').map((array) => {
         return array.split('=');
     });
     for (let i = 0; i < array_cookie.length; i++) {
-        let element = createTR(array_cookie[i]);
-        listTable.appendChild(element);
+        if (value) {
+            for (let j = 0; j < 2; j++) {
+                if (isMatching(value, array_cookie[i][j])) {
+                    let element = createTR(array_cookie[i]);
+                    listTable.appendChild(element);
+                    break;
+                }
+            }
+        } else {
+            let element = createTR(array_cookie[i]);
+            listTable.appendChild(element);
+        }
     }
 }
-
-
 addButton.addEventListener('click', () => {
-    setCookie(addNameInput.value, addValueInput.value);
-    addNameInput.value='';
-    addValueInput.value='';
-    loadCookie();
+    if (filterNameInput.value) {
+        if ((isMatching(addValueInput.value, filterNameInput.value))) {
+            setCookie(addNameInput.value, addValueInput.value);
+            loadCookie(filterNameInput.value);
+            addNameInput.value = '';
+            addValueInput.value = '';
+        } else {
+            setCookie(addNameInput.value, addValueInput.value);
+            addNameInput.value = '';
+            addValueInput.value = '';
+        }
+    } else {
+        setCookie(addNameInput.value, addValueInput.value);
+        addNameInput.value = '';
+        addValueInput.value = '';
+        loadCookie();
+    }
 });
 
 
 filterNameInput.addEventListener('keyup', function (e) {
     let array_names = document.querySelectorAll('.NameOfcookie');
+    let array_value = document.querySelectorAll('.valueOfcookie');
     for (let i = 0; i < array_names.length; i++) {
         if (e.target.value === '') {
             loadCookie();
         } else {
-            if (isMatching(array_names[i].innerHTML, e.target.value)) {
+            if ((isMatching(array_names[i].innerHTML, e.target.value)) || (isMatching(array_value[i].innerHTML, e.target.value))) {
                 array_names[i].parentNode.classList.remove('hide');
-            }else{
+            } else {
                 array_names[i].parentNode.classList.add('hide');
             }
         }
@@ -87,8 +98,9 @@ filterNameInput.addEventListener('keyup', function (e) {
 
 const btn_d = document.querySelectorAll('.delete-btn');
 
-document.addEventListener('click',(e)=>{
-    if(e.target.tagName === 'BUTTON' && e.target.className==='delete-btn'){
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.className === 'delete-btn') {
+        console.log(e.target.className);
         e.target.parentNode.remove();
         deleteCookie(e.target.parentNode.querySelector('.NameOfcookie').textContent);
     }
@@ -106,6 +118,7 @@ function createTR(element) {
     btn.innerHTML = "X";
 
     name.classList.add('NameOfcookie');
+    value.classList.add('valueOfcookie');
     name.innerHTML = element[0];
     value.innerHTML = element[1];
 
@@ -127,7 +140,7 @@ function isMatching(full, chunk) {
 // options - объект с свойствами cookie (expires, path, domain, secure)
 function setCookie(name, value, options) {
     options = options || {};
-    
+
     var expires = options.expires;
 
     if (typeof expires == "number" && expires) {
