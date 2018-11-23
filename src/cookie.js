@@ -65,14 +65,22 @@ addButton.addEventListener('click', () => {
                 addValueInput.value = '';
             }, 100);
         } else {
+            //если задаваемое значение не соответсвуєт фильтру
+            let cookies = document.querySelectorAll('.NameOfcookie');
+            for(let name of cookies){
+                if(name.innerHTML === addNameInput.value){
+                    //если имя такой куки уже есть
+                    console.log('name true');
+                    name.parentElement.remove();
+                }
+            }
             //если задаваемое значение не соответсвуєт фильтру, устанавливаем новую куку только в браузер
             setCookie(addNameInput.value, addValueInput.value);
             setTimeout(() => {
-            addNameInput.value = '';
-            addValueInput.value = '';
-        }, 100);
+                addNameInput.value = '';
+                addValueInput.value = '';
+            }, 100);
         }
-
     } else {
         //если в фильтре нет значиние
         setCookie(addNameInput.value, addValueInput.value);
@@ -89,8 +97,8 @@ addButton.addEventListener('click', () => {
 filterNameInput.addEventListener('keyup', function (e) {
     listTable.innerHTML = '';
     let array_cookie = document.cookie.split('; ').map((array) => {
-                return array.split('=');
-            });
+        return array.split('=');
+    });
     //console.log(array_cookie[0][1]);
     for (let i = 0; i < array_cookie.length; i++) {
         if (e.target.value === '') {
