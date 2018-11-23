@@ -33,49 +33,52 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+loadCookie();
 
-loadCookie(filterNameInput.value);
 
-
-function loadCookie(value) {
-    console.log('value = ',value);
+function loadCookie() {
     listTable.innerHTML = '';
     let array_cookie = document.cookie.split('; ').map((array) => {
         return array.split('=');
     });
     for (let i = 0; i < array_cookie.length; i++) {
-        if (value) {
-            for (let j = 0; j < 2; j++) {
-                if (isMatching(value, array_cookie[i][j])) {
-                    let element = createTR(array_cookie[i]);
-                    listTable.appendChild(element);
-                    break;
-                }
-            }
-        } else {
-            let element = createTR(array_cookie[i]);
-            listTable.appendChild(element);
-        }
+        let element = createTR(array_cookie[i]);
+        listTable.appendChild(element);
     }
 }
+
+
 addButton.addEventListener('click', () => {
     if (filterNameInput.value) {
-        if ((isMatching(addValueInput.value, filterNameInput.value))) {
-            setCookie(addNameInput.value, addValueInput.value);
-            loadCookie(filterNameInput.value);
-            addNameInput.value = '';
-            addValueInput.value = '';
+        //если в фильтре есть значиние
+        if (isMatching(addValueInput.value, filterNameInput.value)) {
+            //если задаваемое значение соответсвуєт фильтру
+            setCookie(addNameInput.value, addValueInput.value); //добавляєм новую куку в браузер
+            let array_cookie = document.cookie.split('; ').map((array) => {
+                return array.split('=');
+            }); //array_cookie - cписок всех кук в браузере
+
+            let element = createTR(array_cookie[array_cookie.length - 1]); //формируем новий елемент с последий добавленой куки
+            listTable.appendChild(element); //добавляєм его в таблицу
+            setTimeout(() => {
+                addNameInput.value = '';
+                addValueInput.value = '';
+            }, 100);//очищаєм поля
         } else {
+            //если задаваемое значение не соответсвуєт фильтру, устанавливаем новую куку только в браузер
             setCookie(addNameInput.value, addValueInput.value);
+        }
+
+    } else {
+        //если в фильтре нет значиние
+        setCookie(addNameInput.value, addValueInput.value);
+        loadCookie();
+        setTimeout(() => {
             addNameInput.value = '';
             addValueInput.value = '';
-        }
-    } else {
-        setCookie(addNameInput.value, addValueInput.value);
-        addNameInput.value = '';
-        addValueInput.value = '';
-        loadCookie();
+        }, 100);
     }
+
 });
 
 
@@ -107,7 +110,6 @@ document.addEventListener('click', (e) => {
 });
 
 
-
 function createTR(element) {
     let tr = document.createElement('tr');
     let name = document.createElement('th');
@@ -125,11 +127,9 @@ function createTR(element) {
     tr.appendChild(name);
     tr.appendChild(value);
     tr.appendChild(btn);
-
-
-
     return tr;
 }
+
 
 function isMatching(full, chunk) {
     return full.toUpperCase().includes(chunk.toUpperCase());
