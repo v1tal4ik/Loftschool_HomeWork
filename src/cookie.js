@@ -63,10 +63,14 @@ addButton.addEventListener('click', () => {
             setTimeout(() => {
                 addNameInput.value = '';
                 addValueInput.value = '';
-            }, 100);//очищаєм поля
+            }, 100);
         } else {
             //если задаваемое значение не соответсвуєт фильтру, устанавливаем новую куку только в браузер
             setCookie(addNameInput.value, addValueInput.value);
+            setTimeout(() => {
+            addNameInput.value = '';
+            addValueInput.value = '';
+        }, 100);
         }
 
     } else {
@@ -83,19 +87,20 @@ addButton.addEventListener('click', () => {
 
 
 filterNameInput.addEventListener('keyup', function (e) {
-    let array_names = document.querySelectorAll('.NameOfcookie');
-    let array_value = document.querySelectorAll('.valueOfcookie');
-    for (let i = 0; i < array_names.length; i++) {
+    listTable.innerHTML = '';
+    let array_cookie = document.cookie.split('; ').map((array) => {
+                return array.split('=');
+            });
+    //console.log(array_cookie[0][1]);
+    for (let i = 0; i < array_cookie.length; i++) {
         if (e.target.value === '') {
             loadCookie();
         } else {
-            if ((isMatching(array_names[i].innerHTML, e.target.value)) || (isMatching(array_value[i].innerHTML, e.target.value))) {
-                array_names[i].parentNode.classList.remove('hide');
-            } else {
-                array_names[i].parentNode.classList.add('hide');
+            if ((isMatching(array_cookie[i][0], e.target.value)) || (isMatching(array_cookie[i][1], e.target.value))) {
+                let element = createTR(array_cookie[i]);
+                listTable.appendChild(element);
             }
         }
-
     }
 });
 
